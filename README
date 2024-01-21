@@ -1,4 +1,4 @@
-This repository contains the Julia code for "On a Fiber Conjecture of Wan". See arxiv link here: ().
+This repository contains the Julia code for "On a Fiber Conjecture of Wan". See arxiv link here: https://arxiv.org/abs/2311.14819.
 
 Lauder-Wan.jl is the implementation of Lauder and Wan's algorithm computing the Newton polygon of an Artin-Schreier curve over a finite field. 
 
