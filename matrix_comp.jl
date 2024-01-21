@@ -19,14 +19,15 @@ a = 2
 Fq, xi = FiniteField(p, a, "xi")
 
 # Matrices related to Dwork theory will be computed to precision x precison size.
-matrix_size = 12
+matrix_size = 20
 
 # All power series will also be computed to precision ps_prec
 # Compute the Artin-Hasse exponential E(x)=\sum_{k=0}^ps_prec u_k x^k
 #
 # All p-adics will be computed to precision padic_prec.
-ps_prec = p*matrix_size - 1
-padic_prec = 25
+AH_prec = p*matrix_size
+ps_prec = p*matrix_size
+padic_prec = 4
 
 ZZq, q = QadicField(p, a, padic_prec)
 
@@ -59,15 +60,15 @@ function un_comp(n)
     push!(u, un)
 end
 
-for n = 2:ps_prec
+for n = 2:AH_prec
     un_comp(n)
 end
 
-Zpi, xpi = PolynomialRing(ZZq, "xpi")
+R, xpi = PolynomialRing(ZZq, "xpi")
+Zpi = ResidueRing(R, xpi^(p - 1) + p)
+
 Zpi_Fq, W = PolynomialRing(Fq, "W")
 L, x = PowerSeriesRing(Zpi, ps_prec, "x")
-
-AH = sum([u[i+1] * x^i for i = 0:ps_prec])
 
 Xi = 1
 #Xi = teich_lift(xi + 2)
@@ -87,9 +88,9 @@ function pi_val(g)
         return 1000
     end
 
-    for i = 0:degree(g)
-        if coeff(g, i) != 0
-            push!(vals, valuation(coeff(g, i)) + i / (p - 1))
+    for i = 0:degree(g.data)
+        if coeff(g.data, i) != 0
+            push!(vals, valuation(coeff(g.data, i)) + i / (p - 1))
         end
     end
 
@@ -97,7 +98,7 @@ function pi_val(g)
 end
 
 function tau_inv(g, k = 1)
-    return map_coefficients(c -> frobenius(c, -k), g)
+    return Zpi(map_coefficients(c -> frobenius(c, -k), g.data))
 end
 
 # Returns tau^(-k)M, some matrix M of size mxm and integer k
@@ -118,8 +119,8 @@ Qw, w = FlintQQ["w"]
 function print_lifted(g, m)
     lifted = 0
 
-    for i in 1:length(g.coeffs)
-        fmp_coeff = lift(Qw, g.coeffs[i])
+    for i in 1:length(g.data.coeffs)
+        fmp_coeff = lift(Qw, g.data.coeffs[i])
         int_coeff = BigInt(numerator(fmp_coeff(0)))
         if (int_coeff % p^m) == 0
             continue
@@ -132,7 +133,7 @@ function print_lifted(g, m)
             print(t, "\\pi^{", i-1, "}")
         end
 
-        if i != length(g.coeffs)
+        if i != length(g.data.coeffs)
             print(" + ")
         end
     end
@@ -145,11 +146,7 @@ for i = 1:matrix_size
         if p * i - j < 0
             nM[matrix_size*(i-1)+(j-1)+1] = Zpi(0)
         else
-            if B.length - B.val < p * i - j + 1
-                nM[matrix_size*(i-1)+(j-1)+1] = Zpi(1)
-            else
-                nM[matrix_size*(i-1)+(j-1)+1] = ((Zpi(B.coeffs[p*i-j+1])))
-            end
+            nM[matrix_size*(i-1)+(j-1)+1] = ((Zpi(B.coeffs[p*i-j+1])))
         end
     end
 end
@@ -164,16 +161,23 @@ c3 =
     (1 // 3) * (tr(MMM^3))
 
 println("*******************")
-print("\\Tr(A) &\\equiv ")
-print_lifted(tr(MMM),1)
+print("\\Tr(\\phi) &\\equiv ")
+print_lifted(tr(MMM),3)
 print("\\bmod p\\\\\n\\\\\n")
-print("\\Tr(A^2) &\\equiv ")
-print_lifted(tr(MMM^2),2)
+print("\\Tr(\\phi^2) &\\equiv ")
+print_lifted(tr(MMM^2),3)
 print("\\bmod p^2\\\\\n\\\\\n")
-print("\\Tr(A^3) &\\equiv ")
+print("\\Tr(\\phi^3) &\\equiv ")
 print_lifted(tr(MMM^3),3)
 print("\\bmod p^3\n")
 
-println("c_1 = ", pi_val(c1))
-println("c_2 = ", pi_val(c2))
-println("c_3 = ", pi_val(c3))
+print("\nc_1 = ")
+print_lifted(c1,1)
+print("\nc_2 = ")
+print_lifted(c2,2)
+print("\nc_3 = ")
+print_lifted(c3,3)
+
+println("\n\nord c_1 = ", pi_val(c1))
+println("ord c_2 = ", pi_val(c2))
+println("ord c_3 = ", pi_val(c3))
