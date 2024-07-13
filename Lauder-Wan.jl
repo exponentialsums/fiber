@@ -6,8 +6,6 @@
 #     Computing Zeta Functions of Artin–schreier Curves over Finite Fields,
 #     LMS Journal of Computation and Mathematics, Volume 5, 2002, pp. 34 - 55.
 #
-# NOTE: p = 2 is *NOT* implemented. It requires a different monomial reduction.
-#
 
 using Nemo
 using Plots, LazySets
