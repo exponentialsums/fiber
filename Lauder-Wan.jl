@@ -393,13 +393,16 @@ end
 #
 #   Computations
 #
+#   These are functions related to finding counterexamples to Wan's
+#   fiber conjecture. 
+#
 ##################################################################
 
 default(titlefontsize = 8)
 
 # Computes the NP's of lambda*fpoly_1 for each lambda in lambda_set.
 #
-# If quick = true, then function will product no output and only
+# If quick = true, then function will produce no output and only
 # return true or false depending on if the NP changed.
 #
 # When quick = false, this returns a dictionary with keys the NP's.
