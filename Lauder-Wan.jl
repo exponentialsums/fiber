@@ -375,7 +375,7 @@ end
 
 # If we  only want the slopes of the NP, this is a quick wrapper.
 function compute_newton_polygon(DF::Dwork_Framework, fpoly)
-    d = ps_degree(fpoly)
+    d = degree(fpoly)
     DetM = compute_Lfunc(DF, fpoly)
 
     if DetM == 1
