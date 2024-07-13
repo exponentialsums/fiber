@@ -1,0 +1,29 @@
+As an example, using Lauder-Wan.jl to compute a Newton polygon, 
+we could do the following (you would want to put this at the bottom of the
+Lauder-Wan.jl file in the "Example" section):
+
+p = 5
+a = 1
+d = 4
+
+DF_g = Dwork_Framework(p,a, d)
+
+NP_slopes = compute_newton_polygon(DF_g, DF_g.X^d + DF_g.X^2)
+println("Slopes = ", NP_slopes)
+
+And this yields the set of (slope, multiplicity):
+
+[[0.25, 1.0], [0.5, 1.0], [0.75, 1.0]],
+
+which is expected as the Hodge polygon. If images of the NP are desired, the
+function test_poly may be used instead:
+
+test_poly(DF_g, DF_g.X^d + DF_g.X^2, [DF_g.Fq(1)]),
+
+and this function will compute NP(lambda*f) for each lambda in lambda_set. 
+The red line plotted by this function is the Hodge polygon.
+
+NOTE: For each p, a and d, the values of dirty_padic_prec (the p-adic precision)
+and dirty_ps_prec (the power series precision) must be manually set. 
+If the NP is computed and does not look correct, increase these values until 
+the slopes conform to expectations. 
