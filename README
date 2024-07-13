@@ -1,10 +1,13 @@
-This repository contains the Julia code for "On a Fiber Conjecture of Wan". See arxiv link here: https://arxiv.org/abs/2311.14819.
+This repository contains the Julia code for "On a Fiber Conjecture of Wan". 
+See arxiv link here: https://arxiv.org/abs/2311.14819.
 
-Lauder-Wan.jl is the implementation of Lauder and Wan's algorithm computing the Newton polygon of an Artin-Schreier curve over a finite field. 
+Lauder-Wan.jl is the implementation of Lauder and Wan's algorithm 
+computing the Newton polygon of an Artin-Schreier curve over a finite field. 
 
 matrix_comp.jl computes the traces in Section 4 of the above paper. 
 
-As an example, using Lauder-Wan.jl to compute a Newton polygon, we could do the following:
+As an example, using Lauder-Wan.jl to compute a Newton polygon, 
+we could do the following:
 
 p = 5
 a = 1
@@ -19,6 +22,17 @@ And this yields the set of (slope, multiplicity):
 
 [[0.25, 1.0], [0.5, 1.0], [0.75, 1.0]],
 
-which is expected as the Hodge polygon. 
+which is expected as the Hodge polygon. If images of the NP are desired, the
+function test_poly may be used instead:
+
+test_poly(DF_g, DF_g.X^d + DF_g.X^2, [DF_g.Fq(1)]),
+
+and this function will compute NP(lambda*f) for each lambda in lambda_set. 
+The red line plotted by this function is the Hodge polygon.
+
+NOTE: For each p, a and d, the values of dirty_padic_prec (the p-adic precision)
+and dirty_ps_prec (the power series precision) must be manually set. 
+If the NP is computed and does not look correct, increase these values until 
+the slopes conform to expectations. 
 
 
