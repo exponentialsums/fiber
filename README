@@ -4,3 +4,21 @@ Lauder-Wan.jl is the implementation of Lauder and Wan's algorithm computing the 
 
 matrix_comp.jl computes the traces in Section 4 of the above paper. 
 
+As an example, using Lauder-Wan.jl to compute a Newton polygon, we could do the following:
+
+p = 5
+a = 1
+d = 4
+
+DF_g = Dwork_Framework(p,a, d)
+
+NP_slopes = compute_newton_polygon(DF_g, DF_g.X^d + DF_g.X^2)
+println("Slopes = ", NP_slopes)
+
+And this yields the set of (slope, multiplicity):
+
+[[0.25, 1.0], [0.5, 1.0], [0.75, 1.0]],
+
+which is expected as the Hodge polygon. 
+
+
